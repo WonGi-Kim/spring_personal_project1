@@ -1,13 +1,19 @@
 package com.sparta.springpersonalproject1.repository;
 
+import com.sparta.springpersonalproject1.dto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class ToDoListRepository {
@@ -35,6 +41,39 @@ public class ToDoListRepository {
         toDoList.setId(id);
 
         return toDoList;
+    }
+
+    public List<ToDoResponseDto> findAllToDos() {
+        String sql = "SELECT * FROM todoTable ORDER BY date DESC";
+        return jdbcTemplate.query(sql, new RowMapper<ToDoResponseDto>() {
+            @Override
+            public ToDoResponseDto mapRow(ResultSet resultSet, int i) throws SQLException {
+                Long id = resultSet.getLong("id");
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                String manager = resultSet.getString("manager");
+                String password = resultSet.getString("password");
+                String date = resultSet.getString("date");
+
+                return new ToDoResponseDto(id,title,content,manager,date);
+            }
+        });
+    }
+
+    public ToDoResponseDto getToDo(Long id) {
+        String sql = "SELECT * FROM todoTable WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<ToDoResponseDto>() {
+            @Override
+            public ToDoResponseDto mapRow(ResultSet resultSet, int i) throws SQLException {
+                Long todoId = resultSet.getLong("id");
+                String title = resultSet.getString("title");
+                String content = resultSet.getString("content");
+                String manager = resultSet.getString("manager");
+                String date = resultSet.getString("date");
+
+                return new ToDoResponseDto(todoId, title, content, manager, date);
+            }
+        });
     }
 }
 

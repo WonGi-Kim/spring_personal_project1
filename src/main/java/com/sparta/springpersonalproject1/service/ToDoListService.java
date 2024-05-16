@@ -6,6 +6,8 @@ import com.sparta.springpersonalproject1.entity.ToDoList;
 import com.sparta.springpersonalproject1.repository.ToDoListRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ToDoListService {
     private final ToDoListRepository toDoListRepository;
@@ -19,6 +21,14 @@ public class ToDoListService {
         ToDoList savedToDoList = toDoListRepository.saveToDoList(toDoList);
         ToDoResponseDto toDoResponseDto = new ToDoResponseDto(toDoList);
         return toDoResponseDto;
+    }
+
+    public List<ToDoResponseDto> getAllToDos() {
+        return toDoListRepository.findAllToDos();
+    }
+
+    public ToDoResponseDto getToDo(Long id) {
+        return toDoListRepository.getToDo(id);
     }
 }
 

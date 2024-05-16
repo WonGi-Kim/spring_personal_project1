@@ -20,4 +20,13 @@ public class ToDoResponseDto {
         this.password = toDoList.getPassword();
         this.date = toDoList.getDate();
     }
+
+    public ToDoResponseDto(Long id, String title, String content, String manager, String date) {
+        this.id = id;
+        this.title = title;
+        this.todo = content;
+        this.manager = manager;
+        this.date = date;
+
+    }
 }
