@@ -83,6 +83,7 @@ public class ToDoListRepository {
                 toDoList.setTitle(toDoList.getTitle());
                 toDoList.setContent(toDoList.getContent());
                 toDoList.setManager(toDoList.getManager());
+                //toDoList.setPassword(toDoList.getPassword());
                 toDoList.setPassword(resultSet.getString("password"));
                 toDoList.setDate(toDoList.getDate());
                 return toDoList;
@@ -90,6 +91,11 @@ public class ToDoListRepository {
                 return null;
             }
         }, id);
+    }
+
+    public void deleteToDo(Long id) {
+        String sql = "DELETE FROM todoTable WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
 

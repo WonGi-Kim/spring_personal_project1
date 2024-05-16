@@ -35,5 +35,10 @@ public class ToDoController {
     public Long updateToDo(@PathVariable Long id,  @PathVariable String password, @RequestBody ToDoRequestDto toDoRequestDto) {
         return toDoListService.updateToDo(id, password, toDoRequestDto);
     }
+
+    @DeleteMapping("/todo/{id}/{password}")
+    public Long deleteToDo(@PathVariable Long id, @PathVariable String password) {
+        return toDoListService.deleteToDo(id, password);
+    }
 }
 
