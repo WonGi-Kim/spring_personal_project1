@@ -57,9 +57,11 @@ public class ToDoListRepository {
     }
 
     // 일정 수정
-    public void updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
-        String sql = "UPDATE todoTable SET title = ?, content = ?, manager = ? WHERE id = ?";
-        jdbcTemplate.update(sql,toDoRequestDto.getTitle(),toDoRequestDto.getContent(),toDoRequestDto.getManager(),id);
+    public ToDoResponseDto updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
+        String updateSql = "UPDATE todoTable SET title = ?, content = ?, manager = ? WHERE id = ?";
+        jdbcTemplate.update(updateSql,toDoRequestDto.getTitle(),toDoRequestDto.getContent(),toDoRequestDto.getManager(),id);
+        String printSql = "SELECT * FROM todoTable WHERE id = ?";
+        return jdbcTemplate.queryForObject(printSql,  new Object[]{id}, this::mapRowForToDo);
     }
 
     // 일정 조회 메서드

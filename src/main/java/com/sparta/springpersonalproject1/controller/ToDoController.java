@@ -32,7 +32,7 @@ public class ToDoController {
     }
 
     @PutMapping("/todo/{id}")
-    public Long updateToDo(@PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
+    public ToDoResponseDto updateToDo(@PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
         return toDoListService.updateToDo(id, toDoRequestDto);
     }
 

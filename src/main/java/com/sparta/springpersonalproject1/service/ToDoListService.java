@@ -32,12 +32,12 @@ public class ToDoListService {
     }
 
 
-    public Long updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
+    public ToDoResponseDto updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
         ToDoList toDoList = toDoListRepository.findById(id);
         if(toDoList != null) {
             if(toDoRequestDto.getPassword().equals(toDoList.getPassword())) {
-                toDoListRepository.updateToDo(id, toDoRequestDto);
-                return id;
+                ToDoResponseDto toDoResponseDto = toDoListRepository.updateToDo(id, toDoRequestDto);
+                return toDoResponseDto;
             } else {
                 throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
             }
