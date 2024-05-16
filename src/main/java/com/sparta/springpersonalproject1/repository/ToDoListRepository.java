@@ -1,5 +1,6 @@
 package com.sparta.springpersonalproject1.repository;
 
+import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
 import com.sparta.springpersonalproject1.dto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,7 @@ public class ToDoListRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // 일정 저장
     public ToDoList saveToDoList(ToDoList toDoList) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -42,17 +44,25 @@ public class ToDoListRepository {
 
         return toDoList;
     }
-
+    // 목록 조회
     public List<ToDoResponseDto> findAllToDos() {
         String sql = "SELECT * FROM todoTable ORDER BY date DESC";
         return jdbcTemplate.query(sql, this::mapRowForToDo);
     }
 
+    // 일정 한 개 조회
     public ToDoResponseDto getToDo(Long id) {
         String sql = "SELECT * FROM todoTable WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, this::mapRowForToDo);
     }
 
+    // 일정 수정
+    public void updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
+        String sql = "UPDATE todoTable SET title = ?, content = ?, manager = ? WHERE id = ?";
+        jdbcTemplate.update(sql,toDoRequestDto.getTitle(),toDoRequestDto.getContent(),toDoRequestDto.getManager(),id);
+    }
+
+    // 일정 조회 메서드
     private ToDoResponseDto mapRowForToDo(ResultSet resultSet, int i) throws SQLException {
         Long id = resultSet.getLong("id");
         String title = resultSet.getString("title");
@@ -61,7 +71,25 @@ public class ToDoListRepository {
         String password = resultSet.getString("password");
         String date = resultSet.getString("date");
 
-        return new ToDoResponseDto(id, title, content, manager, password);
+        return new ToDoResponseDto(id, title, content, manager, date);
+    }
+
+    public ToDoList findById(Long id) {
+        String sql = "SELECT * FROM todoTable WHERE id = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                ToDoList toDoList = new ToDoList();
+                toDoList.setTitle(toDoList.getTitle());
+                toDoList.setContent(toDoList.getContent());
+                toDoList.setManager(toDoList.getManager());
+                toDoList.setPassword(resultSet.getString("password"));
+                toDoList.setDate(toDoList.getDate());
+                return toDoList;
+            } else {
+                return null;
+            }
+        }, id);
     }
 }
 

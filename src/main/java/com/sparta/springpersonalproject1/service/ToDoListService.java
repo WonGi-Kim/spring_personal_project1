@@ -30,5 +30,20 @@ public class ToDoListService {
     public ToDoResponseDto getToDo(Long id) {
         return toDoListRepository.getToDo(id);
     }
+
+
+    public Long updateToDo(Long id, String inputPassword, ToDoRequestDto toDoRequestDto) {
+        ToDoList toDoList = toDoListRepository.findById(id);
+        if(toDoList != null) {
+            if(inputPassword.equals(toDoList.getPassword())) {
+                toDoListRepository.updateToDo(id, toDoRequestDto);
+                return id;
+            } else {
+                throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다." );
+            }
+        } else {
+            throw new IllegalArgumentException("선택한 일정이 존재하지 않습니다.");
+        }
+    }
 }
 

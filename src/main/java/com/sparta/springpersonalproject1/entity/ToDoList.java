@@ -16,7 +16,6 @@ public class ToDoList {
     private String password;
     private String date;
 
-
     public ToDoList(ToDoRequestDto toDoRequestDto) {
         this.title = toDoRequestDto.getTitle();
         this.content = toDoRequestDto.getContent();
