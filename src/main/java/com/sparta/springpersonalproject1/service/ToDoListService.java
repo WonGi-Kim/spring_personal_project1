@@ -32,10 +32,10 @@ public class ToDoListService {
     }
 
 
-    public Long updateToDo(Long id, String inputPassword, ToDoRequestDto toDoRequestDto) {
+    public Long updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
         ToDoList toDoList = toDoListRepository.findById(id);
         if(toDoList != null) {
-            if(inputPassword.equals(toDoList.getPassword())) {
+            if(toDoRequestDto.getPassword().equals(toDoList.getPassword())) {
                 toDoListRepository.updateToDo(id, toDoRequestDto);
                 return id;
             } else {

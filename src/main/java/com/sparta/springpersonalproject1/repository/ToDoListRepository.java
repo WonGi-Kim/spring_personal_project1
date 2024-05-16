@@ -83,7 +83,6 @@ public class ToDoListRepository {
                 toDoList.setTitle(toDoList.getTitle());
                 toDoList.setContent(toDoList.getContent());
                 toDoList.setManager(toDoList.getManager());
-                //toDoList.setPassword(toDoList.getPassword());
                 toDoList.setPassword(resultSet.getString("password"));
                 toDoList.setDate(toDoList.getDate());
                 return toDoList;
