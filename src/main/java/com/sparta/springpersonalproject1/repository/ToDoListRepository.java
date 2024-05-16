@@ -45,35 +45,23 @@ public class ToDoListRepository {
 
     public List<ToDoResponseDto> findAllToDos() {
         String sql = "SELECT * FROM todoTable ORDER BY date DESC";
-        return jdbcTemplate.query(sql, new RowMapper<ToDoResponseDto>() {
-            @Override
-            public ToDoResponseDto mapRow(ResultSet resultSet, int i) throws SQLException {
-                Long id = resultSet.getLong("id");
-                String title = resultSet.getString("title");
-                String content = resultSet.getString("content");
-                String manager = resultSet.getString("manager");
-                String password = resultSet.getString("password");
-                String date = resultSet.getString("date");
-
-                return new ToDoResponseDto(id,title,content,manager,date);
-            }
-        });
+        return jdbcTemplate.query(sql, this::mapRowForToDo);
     }
 
     public ToDoResponseDto getToDo(Long id) {
         String sql = "SELECT * FROM todoTable WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<ToDoResponseDto>() {
-            @Override
-            public ToDoResponseDto mapRow(ResultSet resultSet, int i) throws SQLException {
-                Long todoId = resultSet.getLong("id");
-                String title = resultSet.getString("title");
-                String content = resultSet.getString("content");
-                String manager = resultSet.getString("manager");
-                String date = resultSet.getString("date");
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, this::mapRowForToDo);
+    }
 
-                return new ToDoResponseDto(todoId, title, content, manager, date);
-            }
-        });
+    private ToDoResponseDto mapRowForToDo(ResultSet resultSet, int i) throws SQLException {
+        Long id = resultSet.getLong("id");
+        String title = resultSet.getString("title");
+        String content = resultSet.getString("content");
+        String manager = resultSet.getString("manager");
+        String password = resultSet.getString("password");
+        String date = resultSet.getString("date");
+
+        return new ToDoResponseDto(id, title, content, manager, password);
     }
 }
 
