@@ -1,29 +1,13 @@
 package com.sparta.springpersonalproject1.repository;
 
-import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
-import com.sparta.springpersonalproject1.dto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.entity.ToDoList;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.RowMapperResultSetExtractor;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class ToDoListRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    public ToDoListRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
+public interface ToDoListRepository extends JpaRepository<ToDoList, Long> {
+    /*
     // 일정 저장
     public ToDoList saveToDoList(ToDoList toDoList) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -64,6 +48,12 @@ public class ToDoListRepository {
         return jdbcTemplate.queryForObject(printSql,  new Object[]{id}, this::mapRowForToDo);
     }
 
+    // 일정 삭제
+    public void deleteToDo(Long id) {
+        String sql = "DELETE FROM todoTable WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     // 일정 조회 메서드
     private ToDoResponseDto mapRowForToDo(ResultSet resultSet, int i) throws SQLException {
         Long id = resultSet.getLong("id");
@@ -93,10 +83,6 @@ public class ToDoListRepository {
             }
         }, id);
     }
-
-    public void deleteToDo(Long id) {
-        String sql = "DELETE FROM todoTable WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
+     */
 }
 
