@@ -39,9 +39,10 @@ public class ToDoListService {
     public ToDoResponseDto updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
         ToDoList toDoList = toDoListRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
-        validatePassword(toDoList, toDoRequestDto);
 
+        toDoList.validatePassword(toDoRequestDto); // 패스워드 검사
         toDoList.updateFromDto(toDoRequestDto);  // 업데이트 메서드 호출
+
         ToDoList updatedToDoList = toDoListRepository.save(toDoList);
         return new ToDoResponseDto(updatedToDoList);
     }
@@ -49,19 +50,12 @@ public class ToDoListService {
     public Long deleteToDo(Long id, String inputPassword) {
         ToDoList toDoList = toDoListRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
-        validatePassword(toDoList, inputPassword);
+
+        toDoList.validatePassword(inputPassword);
+
         toDoListRepository.deleteById(id);
         return toDoList.getId();
     }
 
-    private void validatePassword(ToDoList toDoList, String inputPassword) {
-        if (!inputPassword.equals(toDoList.getPassword())) {
-            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
-        }
-    }
-    private void validatePassword(ToDoList toDoList, ToDoRequestDto toDoRequestDto) {
-        if (!toDoRequestDto.getPassword().equals(toDoList.getPassword())) {
-            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
-        }
-    }
+
 }

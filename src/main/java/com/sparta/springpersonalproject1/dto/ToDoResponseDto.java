@@ -18,6 +18,7 @@ public class ToDoResponseDto {
         this.todo = toDoList.getContent();
         this.manager = toDoList.getManager();
         this.date = toDoList.getDate();
+        //this.password = toDoList.getPassword();
     }
 
     public ToDoResponseDto(ToDoList toDoList, boolean isPassword) {

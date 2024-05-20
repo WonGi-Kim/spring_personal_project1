@@ -49,4 +49,18 @@ public class ToDoList {
         this.content = toDoRequestDto.getContent();
         this.manager = toDoRequestDto.getManager();
     }
+
+    public void validatePassword(String inputPassword) {
+        if (!inputPassword.equals(this.getPassword())) {
+            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public void validatePassword(ToDoRequestDto toDoRequestDto) {
+        if (!toDoRequestDto.getPassword().equals(this.getPassword())) {
+            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+
 }
