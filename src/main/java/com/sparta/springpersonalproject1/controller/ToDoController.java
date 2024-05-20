@@ -61,6 +61,12 @@ public class ToDoController {
         return toDoListService.deleteToDo(id, password);
     }
 
+    @DeleteMapping("/todo/delete/")
+    public String deleteAllToDos() {
+        toDoListService.deleteAll();
+        return "삭제";
+    }
+
     private CustomResponse setHttpStatus(ToDoResponseDto responseDto) {
         int statusCode = StatusEnum.OK.getStatusCode();
         String message = StatusEnum.OK.getStatusMessage();

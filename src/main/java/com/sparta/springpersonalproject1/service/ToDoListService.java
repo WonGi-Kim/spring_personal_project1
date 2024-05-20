@@ -57,5 +57,9 @@ public class ToDoListService {
         return toDoList.getId();
     }
 
+    public void deleteAll() {
+        toDoListRepository.deleteAll();
+    }
+
 
 }
