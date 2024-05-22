@@ -8,7 +8,6 @@ import com.sparta.springpersonalproject1.service.ToDoListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,14 +27,9 @@ public class ToDoController {
 
 
     @GetMapping("/todos")
-    public ResponseEntity<List<CustomResponse<ToDoResponseDto>>> getAllToDos() {
+    public ResponseEntity<CustomResponse<ToDoResponseDto>> getAllToDos() {
         List<ToDoResponseDto> responseDtos = toDoListService.getAllToDos();
-        List<CustomResponse<ToDoResponseDto>> customResponses = new ArrayList<>();
-
-        for (ToDoResponseDto responseDto : responseDtos) {
-            customResponses.add(setHttpStatus(responseDto));
-        }
-        return ResponseEntity.ok(customResponses);
+        return ResponseEntity.ok(setHttpStatus(responseDtos));
     }
 
 
@@ -75,6 +69,16 @@ public class ToDoController {
         customResponse.setCode(statusCode);
         customResponse.setMessage(message);
         customResponse.setBody(responseDto);
+        return customResponse;
+    }
+    private CustomResponse setHttpStatus(List<ToDoResponseDto> responseDtos) {
+        int statusCode = StatusEnum.OK.getStatusCode();
+        String message = StatusEnum.OK.getStatusMessage();
+
+        CustomResponse<List<ToDoResponseDto>> customResponse = new CustomResponse<>();
+        customResponse.setCode(statusCode);
+        customResponse.setMessage(message);
+        customResponse.setBody(responseDtos);
         return customResponse;
     }
 }
