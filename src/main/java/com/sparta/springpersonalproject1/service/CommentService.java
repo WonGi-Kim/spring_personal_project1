@@ -24,6 +24,7 @@ public class CommentService {
 
         Comment comment = new Comment(commentRequestDto, toDoList);
         Comment savedComment = commentRepository.save(comment);
+        toDoList.getComments().add(comment);
         return new CommentResponseDto(savedComment);
     }
 

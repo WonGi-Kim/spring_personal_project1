@@ -1,7 +1,12 @@
 package com.sparta.springpersonalproject1.dto;
 
+import com.sparta.springpersonalproject1.entity.Comment;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Getter
 public class ToDoResponseDto {
@@ -11,6 +16,7 @@ public class ToDoResponseDto {
     private String manager;
     private String password;
     private String date;
+    private List<CommentResponseDto> comments;
 
     public ToDoResponseDto(ToDoList toDoList) {
         this.id = toDoList.getId();
@@ -18,7 +24,9 @@ public class ToDoResponseDto {
         this.todo = toDoList.getContent();
         this.manager = toDoList.getManager();
         this.date = toDoList.getDate();
-        //this.password = toDoList.getPassword();
+        this.comments = toDoList.getComments().stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     public ToDoResponseDto(ToDoList toDoList, boolean isPassword) {

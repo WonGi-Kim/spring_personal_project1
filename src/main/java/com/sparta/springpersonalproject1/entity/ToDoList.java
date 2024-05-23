@@ -1,5 +1,6 @@
 package com.sparta.springpersonalproject1.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,7 @@ public class ToDoList {
     private String date;
 
     @OneToMany(mappedBy = "toDoList", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     public ToDoList(ToDoRequestDto toDoRequestDto) {

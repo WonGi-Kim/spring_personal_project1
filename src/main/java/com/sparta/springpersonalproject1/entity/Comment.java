@@ -1,5 +1,6 @@
 package com.sparta.springpersonalproject1.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.springpersonalproject1.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +33,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "to_do_list_id")
+    @JsonBackReference // 직렬화 순환 참조 방지
     private ToDoList toDoList;
 
     public Comment(CommentRequestDto commentRequestDto, ToDoList toDoList) {
