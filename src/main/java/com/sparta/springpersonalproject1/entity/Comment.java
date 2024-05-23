@@ -40,5 +40,9 @@ public class Comment {
         this.toDoList = toDoList;
         this.commentDate = commentRequestDto.getCommentDate(); // 현재 시간으로 설정
     }
+
+    public void updateComment(CommentRequestDto commentRequestDto) {
+        this.commentContent = commentRequestDto.getCommentContent();
+    }
 }
 

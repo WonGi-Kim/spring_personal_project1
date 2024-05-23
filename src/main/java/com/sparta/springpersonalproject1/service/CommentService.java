@@ -27,4 +27,12 @@ public class CommentService {
         return new CommentResponseDto(savedComment);
     }
 
+    public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("선택한 댓글이 존재하지 않습니다."));
+
+        comment.updateComment(commentRequestDto);
+        Comment updatedComment = commentRepository.save(comment);
+        return new CommentResponseDto(updatedComment);
+    }
 }

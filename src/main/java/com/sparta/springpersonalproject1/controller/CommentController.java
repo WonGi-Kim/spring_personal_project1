@@ -3,10 +3,7 @@ package com.sparta.springpersonalproject1.controller;
 import com.sparta.springpersonalproject1.dto.CommentRequestDto;
 import com.sparta.springpersonalproject1.dto.CommentResponseDto;
 import com.sparta.springpersonalproject1.service.CommentService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +17,12 @@ public class CommentController {
     @PostMapping(value = "/comment", produces = "application/json")
     public CommentResponseDto addComment(@RequestBody CommentRequestDto commentRequestDto) {
         CommentResponseDto commentResponseDto = commentService.addComment(commentRequestDto);
+        return commentResponseDto;
+    }
+
+    @PutMapping("/comment/{id}")
+    public CommentResponseDto updateComment(@PathVariable("id") Long id, @RequestBody CommentRequestDto commentRequestDto) {
+        CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto);
         return commentResponseDto;
     }
 }
