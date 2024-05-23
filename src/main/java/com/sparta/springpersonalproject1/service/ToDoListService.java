@@ -31,14 +31,12 @@ public class ToDoListService {
     }
 
     public ToDoResponseDto getToDo(Long id) {
-        ToDoList toDoList = toDoListRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
+        ToDoList toDoList = findByToDoId(id);
         return new ToDoResponseDto(toDoList);
     }
 
     public ToDoResponseDto updateToDo(Long id, ToDoRequestDto toDoRequestDto) {
-        ToDoList toDoList = toDoListRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
+        ToDoList toDoList = findByToDoId(id);
 
         toDoList.validatePassword(toDoRequestDto); // 패스워드 검사
         toDoList.updateFromDto(toDoRequestDto);  // 업데이트 메서드 호출
@@ -48,8 +46,7 @@ public class ToDoListService {
     }
 
     public Long deleteToDo(Long id, String inputPassword) {
-        ToDoList toDoList = toDoListRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
+        ToDoList toDoList = findByToDoId(id);
 
         toDoList.validatePassword(inputPassword);
 
@@ -59,6 +56,12 @@ public class ToDoListService {
 
     public void deleteAll() {
         toDoListRepository.deleteAll();
+    }
+
+    private ToDoList findByToDoId(Long id) {
+        ToDoList toDoList = toDoListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("선택한 일정이 존재하지 않습니다."));
+        return toDoList;
     }
 
 

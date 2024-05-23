@@ -28,11 +28,24 @@ public class CommentService {
     }
 
     public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("선택한 댓글이 존재하지 않습니다."));
+        Comment comment = findByCommentId(id);
 
         comment.updateComment(commentRequestDto);
         Comment updatedComment = commentRepository.save(comment);
         return new CommentResponseDto(updatedComment);
+    }
+
+    public Long deleteComment(Long id) {
+        Comment comment = findByCommentId(id);
+
+        commentRepository.deleteById(id);
+        return comment.getId();
+    }
+
+    private Comment findByCommentId(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("선택한 댓글이 존재하지 않습니다."));
+
+        return comment;
     }
 }

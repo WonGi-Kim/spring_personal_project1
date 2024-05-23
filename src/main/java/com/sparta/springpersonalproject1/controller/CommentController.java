@@ -25,4 +25,9 @@ public class CommentController {
         CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto);
         return commentResponseDto;
     }
+
+    @DeleteMapping("/comment/{id}")
+    public Long deleteComment(@PathVariable("id") Long id) {
+        return commentService.deleteComment(id);
+    }
 }
