@@ -2,6 +2,8 @@ package com.sparta.springpersonalproject1.dto;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class ToDoRequestDto {
     private String title;
@@ -9,4 +11,5 @@ public class ToDoRequestDto {
     private String manager;
     private String password;
     private String date;
+    //private List<CommentResponseDto> commentResponse;
 }
