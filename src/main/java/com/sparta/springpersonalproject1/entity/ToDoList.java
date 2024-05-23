@@ -1,16 +1,16 @@
 package com.sparta.springpersonalproject1.entity;
 
 import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,6 +36,9 @@ public class ToDoList {
     private String password;
 
     private String date;
+
+    @OneToMany(mappedBy = "toDoList", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public ToDoList(ToDoRequestDto toDoRequestDto) {
         this.title = toDoRequestDto.getTitle();
