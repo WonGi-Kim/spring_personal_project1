@@ -10,6 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -27,10 +31,8 @@ public class Comment {
     @Size(max = 200)
     private String username; // 나중에 회원가입 하면 변경 예정
 
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @CreationTimestamp
-//    private Date commentDate;
-    private String commentDate;
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp commentDate;
 
     @ManyToOne
     @JoinColumn(name = "to_do_list_id")
@@ -41,7 +43,7 @@ public class Comment {
         this.commentContent = commentRequestDto.getCommentContent();
         this.username = commentRequestDto.getUsername();
         this.toDoList = toDoList;
-        this.commentDate = commentRequestDto.getCommentDate(); // 현재 시간으로 설정
+        this.commentDate = getCommentDate(); // 현재 시간으로 설정
     }
 
     public void updateComment(CommentRequestDto commentRequestDto) {

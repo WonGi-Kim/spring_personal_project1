@@ -3,7 +3,9 @@ package com.sparta.springpersonalproject1.dto;
 import com.sparta.springpersonalproject1.entity.Comment;
 import lombok.Getter;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 public class CommentResponseDto {
@@ -11,7 +13,7 @@ public class CommentResponseDto {
     private String commentContent;
     private String username;
     private Long todoListId;
-    private String commentDate;
+    private Timestamp commentDate;
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();

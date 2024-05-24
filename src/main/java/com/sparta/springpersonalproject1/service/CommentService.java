@@ -11,6 +11,8 @@ import com.sparta.springpersonalproject1.repository.ToDoListRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -33,7 +35,7 @@ public class CommentService {
         Comment comment = new Comment(commentRequestDto, toDoList);
         Comment savedComment = commentRepository.save(comment);
         toDoList.getComments().add(comment);
-
+        comment.setCommentDate(new Timestamp(System.currentTimeMillis()));
         return new CommentResponseDto(savedComment);
     }
 
