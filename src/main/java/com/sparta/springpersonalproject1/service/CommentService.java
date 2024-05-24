@@ -1,11 +1,14 @@
 package com.sparta.springpersonalproject1.service;
 
+import com.sparta.springpersonalproject1.StatusEnum;
 import com.sparta.springpersonalproject1.dto.CommentRequestDto;
 import com.sparta.springpersonalproject1.dto.CommentResponseDto;
+import com.sparta.springpersonalproject1.dto.CustomResponse;
 import com.sparta.springpersonalproject1.entity.Comment;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import com.sparta.springpersonalproject1.repository.CommentRepository;
 import com.sparta.springpersonalproject1.repository.ToDoListRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,26 +25,40 @@ public class CommentService {
         ToDoList toDoList = toDoListRepository.findById(commentRequestDto.getToDoListId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ToDoList ID"));
 
+        // 데이터 유효성 검사
+        if (commentRequestDto.getCommentContent() == null || commentRequestDto.getCommentContent().isEmpty()) {
+            throw new IllegalArgumentException("Invalid Comment Content");
+        }
+
         Comment comment = new Comment(commentRequestDto, toDoList);
         Comment savedComment = commentRepository.save(comment);
         toDoList.getComments().add(comment);
+
         return new CommentResponseDto(savedComment);
     }
 
     public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto) {
         Comment comment = findByCommentId(id);
+        if (comment.getCommentContent() == null || comment.getCommentContent().isEmpty() ||
+                !comment.getUsername().equals(commentRequestDto.getUsername()) ) {
+            throw new IllegalArgumentException("Invalid Comment Username");
+        }
 
         comment.updateComment(commentRequestDto);
         Comment updatedComment = commentRepository.save(comment);
         return new CommentResponseDto(updatedComment);
     }
 
-    public Long deleteComment(Long id) {
+    public String deleteComment(Long id, CommentRequestDto commentRequestDto) {
         Comment comment = findByCommentId(id);
-
-        commentRepository.deleteById(id);
-        return comment.getId();
+        if(comment.getUsername().equals(commentRequestDto.getUsername())) {
+            commentRepository.deleteById(id);
+            return "삭제 완료";
+        } else {
+            throw new IllegalArgumentException("Invalid Comment Username");
+        }
     }
+
 
     private Comment findByCommentId(Long id) {
         Comment comment = commentRepository.findById(id)

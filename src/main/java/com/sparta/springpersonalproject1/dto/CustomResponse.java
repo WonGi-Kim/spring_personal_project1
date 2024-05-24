@@ -9,7 +9,6 @@ public class CustomResponse<T> {
     private T body;
 
     public CustomResponse() {
-
     }
 
     public void setCode(int statusCode) {
