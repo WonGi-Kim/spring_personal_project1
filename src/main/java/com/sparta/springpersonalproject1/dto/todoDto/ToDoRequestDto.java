@@ -6,7 +6,7 @@ import lombok.Getter;
 public class ToDoRequestDto {
     private String title;
     private String content;
-    private String manager;
+    private String username;
     private String password;
     private String date;
     //private List<CommentResponseDto> commentResponse;

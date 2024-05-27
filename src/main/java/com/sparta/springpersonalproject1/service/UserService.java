@@ -23,7 +23,9 @@ public class UserService {
             throw new IllegalArgumentException("Username already exists.");
         }
         // parser
-        if (requestDto.getUsername().matches(".*[A-Z].*") || requestDto.getPassword().matches(".*[A-Z].*")) {
+        if (requestDto.getUsername().matches(".*[A-Z].*") ||
+                requestDto.getPassword().matches(".*[A-Z].*") ||
+                requestDto.getPassword().length() < 8 || requestDto.getPassword().length() > 16) {
             throw new InputMismatchException("대문자 포함됨");
         }
 

@@ -1,5 +1,6 @@
 package com.sparta.springpersonalproject1.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.springpersonalproject1.dto.todoDto.ToDoRequestDto;
 import jakarta.persistence.*;
@@ -29,8 +30,8 @@ public class ToDoList {
     @Size(max = 200)
     private String content;
 
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    private String manager;
+    @NotBlank(message = "필수")
+    private String username;
 
     @NotBlank
     private String password;
@@ -41,17 +42,22 @@ public class ToDoList {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
+
     public ToDoList(ToDoRequestDto toDoRequestDto) {
         this.title = toDoRequestDto.getTitle();
         this.content = toDoRequestDto.getContent();
-        this.manager = toDoRequestDto.getManager();
+        this.username = toDoRequestDto.getUsername();
         this.password = toDoRequestDto.getPassword();
         this.date = toDoRequestDto.getDate();
     }
     public void updateFromDto(ToDoRequestDto toDoRequestDto) {
         this.title = toDoRequestDto.getTitle();
         this.content = toDoRequestDto.getContent();
-        this.manager = toDoRequestDto.getManager();
+        this.username = toDoRequestDto.getUsername();
     }
 
     public void validatePassword(String inputPassword) {

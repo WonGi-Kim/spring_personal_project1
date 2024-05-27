@@ -32,9 +32,16 @@ public class Comment {
     private Timestamp commentDate;
 
     @ManyToOne
-    @JoinColumn(name = "to_do_list_id")
+    @JoinColumn(name = "to_do_id relate_comment")
     @JsonBackReference // 직렬화 순환 참조 방지
     private ToDoList toDoList;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id relate_comment")
+    @JsonBackReference
+    private User user;
+
+
 
     public Comment(CommentRequestDto commentRequestDto, ToDoList toDoList) {
         this.commentContent = commentRequestDto.getCommentContent();

@@ -3,7 +3,6 @@ package com.sparta.springpersonalproject1.controller;
 import com.sparta.springpersonalproject1.dto.CustomResponse;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterReqeustDto;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterResponseDto;
-import com.sparta.springpersonalproject1.entity.User;
 import com.sparta.springpersonalproject1.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

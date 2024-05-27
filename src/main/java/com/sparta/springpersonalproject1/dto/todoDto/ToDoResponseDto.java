@@ -13,7 +13,7 @@ public class ToDoResponseDto {
     private Long id;
     private String title;
     private String todo;
-    private String manager;
+    private String username;
     private String password;
     private String date;
     private List<CommentResponseDto> comments;
@@ -22,7 +22,7 @@ public class ToDoResponseDto {
         this.id = toDoList.getId();
         this.title = toDoList.getTitle();
         this.todo = toDoList.getContent();
-        this.manager = toDoList.getManager();
+        this.username = toDoList.getUsername();
         this.date = toDoList.getDate();
         this.comments = toDoList.getComments().stream()
                 .map(CommentResponseDto::new)
@@ -33,7 +33,7 @@ public class ToDoResponseDto {
         this.id = toDoList.getId();
         this.title = toDoList.getTitle();
         this.todo = toDoList.getContent();
-        this.manager = toDoList.getManager();
+        this.username = toDoList.getUsername();
         this.date = toDoList.getDate();
         if (isPassword) {
             this.password = toDoList.getPassword();
