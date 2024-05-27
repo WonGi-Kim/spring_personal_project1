@@ -1,4 +1,4 @@
-package com.sparta.springpersonalproject1;
+package com.sparta.springpersonalproject1.Enum;
 
 public enum StatusEnum {
 

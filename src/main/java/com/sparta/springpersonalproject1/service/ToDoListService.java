@@ -1,7 +1,7 @@
 package com.sparta.springpersonalproject1.service;
 
-import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
-import com.sparta.springpersonalproject1.dto.ToDoResponseDto;
+import com.sparta.springpersonalproject1.dto.todoDto.ToDoRequestDto;
+import com.sparta.springpersonalproject1.dto.todoDto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import com.sparta.springpersonalproject1.repository.ToDoListRepository;
 import org.springframework.stereotype.Service;

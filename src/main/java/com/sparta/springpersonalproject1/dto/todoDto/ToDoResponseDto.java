@@ -1,6 +1,6 @@
-package com.sparta.springpersonalproject1.dto;
+package com.sparta.springpersonalproject1.dto.todoDto;
 
-import com.sparta.springpersonalproject1.entity.Comment;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentResponseDto;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import lombok.Getter;
 

@@ -1,8 +1,6 @@
-package com.sparta.springpersonalproject1.dto;
+package com.sparta.springpersonalproject1.dto.todoDto;
 
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class ToDoRequestDto {

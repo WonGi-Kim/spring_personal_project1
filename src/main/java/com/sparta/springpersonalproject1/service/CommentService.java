@@ -1,14 +1,11 @@
 package com.sparta.springpersonalproject1.service;
 
-import com.sparta.springpersonalproject1.StatusEnum;
-import com.sparta.springpersonalproject1.dto.CommentRequestDto;
-import com.sparta.springpersonalproject1.dto.CommentResponseDto;
-import com.sparta.springpersonalproject1.dto.CustomResponse;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentRequestDto;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentResponseDto;
 import com.sparta.springpersonalproject1.entity.Comment;
 import com.sparta.springpersonalproject1.entity.ToDoList;
 import com.sparta.springpersonalproject1.repository.CommentRepository;
 import com.sparta.springpersonalproject1.repository.ToDoListRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -29,7 +26,7 @@ public class CommentService {
 
         // 데이터 유효성 검사
         if (commentRequestDto.getCommentContent() == null || commentRequestDto.getCommentContent().isEmpty()) {
-            throw new IllegalArgumentException("Invalid Comment Content");
+            throw new IllegalArgumentException("Invalid commentDto Content");
         }
 
         Comment comment = new Comment(commentRequestDto, toDoList);
@@ -43,7 +40,7 @@ public class CommentService {
         Comment comment = findByCommentId(id);
         if (comment.getCommentContent() == null || comment.getCommentContent().isEmpty() ||
                 !comment.getUsername().equals(commentRequestDto.getUsername()) ) {
-            throw new IllegalArgumentException("Invalid Comment Username");
+            throw new IllegalArgumentException("Invalid commentDto Username");
         }
 
         comment.updateComment(commentRequestDto);
@@ -57,7 +54,7 @@ public class CommentService {
             commentRepository.deleteById(id);
             return "삭제 완료";
         } else {
-            throw new IllegalArgumentException("Invalid Comment Username");
+            throw new IllegalArgumentException("Invalid commentDto Username");
         }
     }
 

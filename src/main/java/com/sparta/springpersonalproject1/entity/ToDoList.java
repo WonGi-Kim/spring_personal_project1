@@ -1,10 +1,9 @@
 package com.sparta.springpersonalproject1.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
+import com.sparta.springpersonalproject1.dto.todoDto.ToDoRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

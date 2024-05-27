@@ -1,18 +1,15 @@
 package com.sparta.springpersonalproject1.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sparta.springpersonalproject1.dto.CommentRequestDto;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter

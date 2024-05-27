@@ -1,7 +1,7 @@
 package com.sparta.springpersonalproject1.controller;
 
-import com.sparta.springpersonalproject1.dto.CommentRequestDto;
-import com.sparta.springpersonalproject1.dto.CommentResponseDto;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentRequestDto;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentResponseDto;
 import com.sparta.springpersonalproject1.dto.CustomResponse;
 import com.sparta.springpersonalproject1.service.CommentService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class CommentController {
             CommentResponseDto commentResponseDto = commentService.addComment(commentRequestDto);
             return ResponseEntity.ok().body(makeResponse(commentResponseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeResponse("Invalid input : Check ToDoListId or Comment Content does not null", HttpStatus.BAD_REQUEST));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
         }
     }
 

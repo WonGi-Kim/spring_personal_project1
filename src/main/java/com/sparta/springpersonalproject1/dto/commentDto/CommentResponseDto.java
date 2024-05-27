@@ -1,11 +1,9 @@
-package com.sparta.springpersonalproject1.dto;
+package com.sparta.springpersonalproject1.dto.commentDto;
 
 import com.sparta.springpersonalproject1.entity.Comment;
 import lombok.Getter;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 public class CommentResponseDto {

@@ -1,9 +1,9 @@
 package com.sparta.springpersonalproject1.controller;
 
-import com.sparta.springpersonalproject1.StatusEnum;
+import com.sparta.springpersonalproject1.Enum.StatusEnum;
 import com.sparta.springpersonalproject1.dto.CustomResponse;
-import com.sparta.springpersonalproject1.dto.ToDoRequestDto;
-import com.sparta.springpersonalproject1.dto.ToDoResponseDto;
+import com.sparta.springpersonalproject1.dto.todoDto.ToDoRequestDto;
+import com.sparta.springpersonalproject1.dto.todoDto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.service.ToDoListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

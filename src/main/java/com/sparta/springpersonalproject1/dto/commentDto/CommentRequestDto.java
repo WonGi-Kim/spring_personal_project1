@@ -1,4 +1,4 @@
-package com.sparta.springpersonalproject1.dto;
+package com.sparta.springpersonalproject1.dto.commentDto;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Temporal;
@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Getter
