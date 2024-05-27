@@ -18,15 +18,11 @@ public class UserRegisterReqeustDto {
     private String nickname;
 
     @Size(min = 4, max = 10)
-    @Pattern(regexp = "[a-z]+")
-    @Pattern(regexp = "[0-9]+")
-    @Column(nullable = false, unique = true)
+    @Pattern(regexp = "[a-z0-9]+")
     private String username;
 
-    @Size(min = 8, max = 15)
-    @Pattern(regexp = "[a-z]+")
-    @Pattern(regexp = "[0-9]+")
-    @Column(nullable = false)
+    @Size(min = 8, max = 16)
+    @Pattern(regexp = "[a-z0-9]+")
     private String password;
 
     @Basic
@@ -34,6 +30,5 @@ public class UserRegisterReqeustDto {
     @CreationTimestamp
     private Timestamp createdOn;
 
-    @Column(nullable = false)
     private String role;
 }

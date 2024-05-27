@@ -2,6 +2,7 @@ package com.sparta.springpersonalproject1.controller;
 
 import com.sparta.springpersonalproject1.Enum.UserRoleEnum;
 import com.sparta.springpersonalproject1.dto.JwtRequestDto;
+import com.sparta.springpersonalproject1.dto.userDto.UserLoginRequestDto;
 import com.sparta.springpersonalproject1.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class JwtController {
     }
 
     @GetMapping("/create-token")
-    public String createJwt(HttpServletResponse res, @RequestBody JwtRequestDto jwtRequestDto) {
-        String token = jwtUtil.generateToken(jwtRequestDto.getUsername(), UserRoleEnum.valueOf(jwtRequestDto.getRole()));
+    public String createJwt(HttpServletResponse res, @RequestBody UserLoginRequestDto loginRequestDto) {
+        String token = jwtUtil.generateToken(loginRequestDto.getUsername(), UserRoleEnum.valueOf(loginRequestDto.getRole()));
         jwtUtil.addJwtToCookie(token, res);
         return token;
     }

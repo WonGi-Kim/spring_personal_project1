@@ -17,7 +17,7 @@ public class UserRegisterResponseDto {
     public UserRegisterResponseDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.password = user.getPassword();
+        //this.password = user.getPassword();
         this.role = user.getRole();
         this.createdOn = user.getCreatedOn();
         this.nickname = user.getNickname();

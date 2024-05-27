@@ -4,17 +4,23 @@ import com.sparta.springpersonalproject1.dto.userDto.UserRegisterReqeustDto;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterResponseDto;
 import com.sparta.springpersonalproject1.entity.User;
 import com.sparta.springpersonalproject1.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.sql.Timestamp;
 import java.util.InputMismatchException;
 
 @Service
+@Validated
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserRegisterResponseDto registerUser(UserRegisterReqeustDto requestDto) {
@@ -22,17 +28,19 @@ public class UserService {
         if (userRepository.existsByUsername(requestDto.getUsername())) {
             throw new IllegalArgumentException("Username already exists.");
         }
-        // parser
-        if (requestDto.getUsername().matches(".*[A-Z].*") ||
-                requestDto.getPassword().matches(".*[A-Z].*") ||
-                requestDto.getPassword().length() < 8 || requestDto.getPassword().length() > 16) {
-            throw new InputMismatchException("대문자 포함됨");
+
+        if (requestDto.getPassword().length() < 8 || requestDto.getPassword().length() > 16) {
+            throw new IllegalArgumentException("Password length must be between 8 and 16 characters.");
         }
+
 
         User user = new User(requestDto);
         user.setCreatedOn(new Timestamp(System.currentTimeMillis()));
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
         return new UserRegisterResponseDto(user);
+
+
     }
 
 }

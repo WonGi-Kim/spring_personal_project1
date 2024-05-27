@@ -1,6 +1,5 @@
 package com.sparta.springpersonalproject1.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterReqeustDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
@@ -18,7 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+
+public class User { // Entity에서 유효성 검사 제거
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,9 +31,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Size(min = 8, max = 15)
-    @Pattern(regexp = "[a-z0-9]+")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 254) // 암호화 한 비밀번호의 길이
     private String password;
 
     @Column(nullable = false)
@@ -48,7 +46,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
-
     public User(UserRegisterReqeustDto requestDto) {
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();
@@ -57,3 +54,5 @@ public class User {
         this.createdOn = getCreatedOn();
     }
 }
+
+
