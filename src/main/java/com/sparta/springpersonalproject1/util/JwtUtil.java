@@ -69,7 +69,7 @@ public class JwtUtil {
 
     public String substringToken(String tokenValue) {
         // 토큰의 값 검사
-        if(StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7); // BAERER_PREFIX 숫자의 길이가 7이므로 그 이후의 값을 짤라서 가져옴
         }
         System.out.println("Not Found Token");
@@ -97,5 +97,17 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
+    public Claims getAllClaimsFromToken(String token) {
+        Claims info = getUserInfoFromToken(token);
+        return info;
+    }
 
+    public String getUsernameFromToken(String token) {
+        token = substringToken(token);
+        if (!validateToken(token)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.getSubject();
+    }
 }

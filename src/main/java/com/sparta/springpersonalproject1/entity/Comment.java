@@ -19,34 +19,29 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank
-    @Size(max = 200)
     private String commentContent;
-
-    @NotBlank
-    @Size(max = 200)
     private String username; // 나중에 회원가입 하면 변경 예정
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp commentDate;
 
     @ManyToOne
-    @JoinColumn(name = "to_do_id relate_comment")
+    @JoinColumn(name = "to_do_id_relate_comment")
     @JsonBackReference // 직렬화 순환 참조 방지
     private ToDoList toDoList;
 
     @ManyToOne
-    @JoinColumn(name = "user_id relate_comment")
+    @JoinColumn(name = "user_id_relate_comment")
     @JsonBackReference
     private User user;
 
 
 
-    public Comment(CommentRequestDto commentRequestDto, ToDoList toDoList) {
+    public Comment(CommentRequestDto commentRequestDto, ToDoList toDoList, User user) {
         this.commentContent = commentRequestDto.getCommentContent();
         this.username = commentRequestDto.getUsername();
         this.toDoList = toDoList;
+        this.user = user;
         this.commentDate = getCommentDate(); // 현재 시간으로 설정
     }
 

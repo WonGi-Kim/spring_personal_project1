@@ -36,9 +36,11 @@ public class CommentController {
             if (!jwtUtil.validateToken(token)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CustomResponse.makeResponse("Invalid token", HttpStatus.UNAUTHORIZED));
             }
-            Claims claims = getAllClaimsFromToken(token);
+
+            Claims claims = jwtUtil.getAllClaimsFromToken(token);
             String username = claims.getSubject();
             CommentResponseDto commentResponseDto = commentService.addComment(commentRequestDto, username);
+
             return ResponseEntity.ok().body(CustomResponse.makeResponse(commentResponseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -66,11 +68,6 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CustomResponse.makeResponse("Invalid input : Check username or existence comment", HttpStatus.BAD_REQUEST));
         }
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        Claims info = jwtUtil.getUserInfoFromToken(token);
-        return info;
     }
 
 }

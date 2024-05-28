@@ -2,9 +2,14 @@ package com.sparta.springpersonalproject1.controller;
 
 import com.sparta.springpersonalproject1.Enum.StatusEnum;
 import com.sparta.springpersonalproject1.dto.CustomResponse;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentRequestDto;
+import com.sparta.springpersonalproject1.dto.commentDto.CommentResponseDto;
 import com.sparta.springpersonalproject1.dto.todoDto.ToDoRequestDto;
 import com.sparta.springpersonalproject1.dto.todoDto.ToDoResponseDto;
 import com.sparta.springpersonalproject1.service.ToDoListService;
+import com.sparta.springpersonalproject1.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +19,24 @@ import java.util.List;
 @RequestMapping("/api")
 public class ToDoController {
     private final ToDoListService toDoListService;
+    private final JwtUtil jwtUtil;
 
-    public ToDoController(ToDoListService toDoListService) {
+
+    public ToDoController(ToDoListService toDoListService, JwtUtil jwtUtil) {
         this.toDoListService = toDoListService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping(value = "/todo", produces = "application/json")
-    public ResponseEntity<CustomResponse<ToDoResponseDto>> createToDo(@RequestBody ToDoRequestDto toDoRequestDto) {
-        ToDoResponseDto responseDto = toDoListService.createToDo(toDoRequestDto);
-        return ResponseEntity.ok(setHttpStatus(responseDto));
+    public ResponseEntity<CustomResponse<?>> createToDo(@RequestHeader("Authorization") String token,@RequestBody ToDoRequestDto toDoRequestDto) {
+        try {
+            String username = jwtUtil.getUsernameFromToken(token);
+            ToDoResponseDto responseDto = toDoListService.createToDo(toDoRequestDto, username);
+            return ResponseEntity.ok().body(CustomResponse.makeResponse(responseDto, HttpStatus.OK));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        }
     }
 
 
@@ -34,43 +48,52 @@ public class ToDoController {
 
 
     @GetMapping("/todo/{id}")
-    public ResponseEntity<CustomResponse<ToDoResponseDto>> getToDo(@PathVariable Long id) {
+    public ResponseEntity<CustomResponse<?>> getToDo(@PathVariable Long id) {
 
         ToDoResponseDto responseDto = toDoListService.getToDo(id);
         if (responseDto != null) {
-            return ResponseEntity.ok(setHttpStatus(responseDto));
+            return ResponseEntity.ok().body(CustomResponse.makeResponse(responseDto, HttpStatus.OK));
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.makeResponse("Invalid input : Check To Do Id", HttpStatus.BAD_REQUEST));
         }
     }
 
     @PutMapping("/todo/{id}")
-    public ResponseEntity<CustomResponse<ToDoResponseDto>> updateToDo(@PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
-        ToDoResponseDto responseDto = toDoListService.updateToDo(id, toDoRequestDto);
-        return ResponseEntity.ok(setHttpStatus(responseDto));
+    public ResponseEntity<CustomResponse<?>> updateToDo(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
+        try {
+            String username = jwtUtil.getUsernameFromToken(token);
+            ToDoResponseDto responseDto = toDoListService.updateToDo(id, toDoRequestDto, username);
+            return ResponseEntity.ok().body(CustomResponse.makeResponse(responseDto, HttpStatus.OK));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        }
     }
 
     @DeleteMapping("/todo/{id}/{password}")
-    public Long deleteToDo(@PathVariable Long id, @PathVariable String password) {
-        return toDoListService.deleteToDo(id, password);
+    public ResponseEntity<CustomResponse<?>> deleteToDo(@RequestHeader("Authorization") String token, @PathVariable Long id, @PathVariable String password) {
+        try {
+            String username = jwtUtil.getUsernameFromToken(token);
+            Long deletedNumber = toDoListService.deleteToDo(id, password, username);
+            return ResponseEntity.ok().body(CustomResponse.makeResponse(deletedNumber, HttpStatus.OK));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        }
     }
 
     @DeleteMapping("/todo/delete/")
-    public String deleteAllToDos() {
-        toDoListService.deleteAll();
-        return "삭제";
+    public ResponseEntity<CustomResponse<?>> deleteAllToDos(@RequestHeader("Authorization") String token) {
+        try {
+            String username = jwtUtil.getUsernameFromToken(token);
+            return ResponseEntity.ok().body(CustomResponse.makeResponse(toDoListService.deleteAll(username), HttpStatus.OK));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        }
     }
 
-    private CustomResponse setHttpStatus(ToDoResponseDto responseDto) {
-        int statusCode = StatusEnum.OK.getStatusCode();
-        String message = StatusEnum.OK.getStatusMessage();
-
-        CustomResponse<ToDoResponseDto> customResponse = new CustomResponse<>();
-        customResponse.setCode(statusCode);
-        customResponse.setMessage(message);
-        customResponse.setBody(responseDto);
-        return customResponse;
-    }
     private CustomResponse setHttpStatus(List<ToDoResponseDto> responseDtos) {
         int statusCode = StatusEnum.OK.getStatusCode();
         String message = StatusEnum.OK.getStatusMessage();

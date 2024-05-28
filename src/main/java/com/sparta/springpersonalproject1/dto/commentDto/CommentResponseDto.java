@@ -11,6 +11,7 @@ public class CommentResponseDto {
     private String commentContent;
     private String username;
     private Long todoListId;
+    private Long userId;
     private Timestamp commentDate;
 
     public CommentResponseDto(Comment comment) {
@@ -18,6 +19,7 @@ public class CommentResponseDto {
         this.commentContent = comment.getCommentContent();
         this.username = comment.getUsername();
         this.todoListId = comment.getToDoList().getId();
+        this.userId = comment.getUser().getId();
         this.commentDate = comment.getCommentDate();
     }
 }

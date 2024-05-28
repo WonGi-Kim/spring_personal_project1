@@ -4,8 +4,10 @@ import com.sparta.springpersonalproject1.dto.commentDto.CommentRequestDto;
 import com.sparta.springpersonalproject1.dto.commentDto.CommentResponseDto;
 import com.sparta.springpersonalproject1.entity.Comment;
 import com.sparta.springpersonalproject1.entity.ToDoList;
+import com.sparta.springpersonalproject1.entity.User;
 import com.sparta.springpersonalproject1.repository.CommentRepository;
 import com.sparta.springpersonalproject1.repository.ToDoListRepository;
+import com.sparta.springpersonalproject1.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -14,26 +16,31 @@ import java.sql.Timestamp;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ToDoListRepository toDoListRepository;
+    private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository, ToDoListRepository toDoListRepository) {
+    public CommentService(CommentRepository commentRepository, ToDoListRepository toDoListRepository, UserRepository userRepository) {
         this.toDoListRepository = toDoListRepository;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     public CommentResponseDto addComment(CommentRequestDto commentRequestDto, String username) {
         ToDoList toDoList = toDoListRepository.findById(commentRequestDto.getToDoListId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ToDoList ID"));
 
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
         // 데이터 유효성 검사
         if (commentRequestDto.getCommentContent() == null || commentRequestDto.getCommentContent().isEmpty()) {
             throw new IllegalArgumentException("Invalid commentDto Content");
         }
 
-        Comment comment = new Comment(commentRequestDto, toDoList);
-        Comment savedComment = commentRepository.save(comment);
+        Comment comment = new Comment(commentRequestDto, toDoList, user);
+        user.getComments().add(comment);
         toDoList.getComments().add(comment);
         comment.setCommentDate(new Timestamp(System.currentTimeMillis()));
         comment.setUsername(username);
+        Comment savedComment = commentRepository.save(comment);
         return new CommentResponseDto(savedComment);
     }
 
