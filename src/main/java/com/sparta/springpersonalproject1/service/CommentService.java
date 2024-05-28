@@ -20,7 +20,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public CommentResponseDto addComment(CommentRequestDto commentRequestDto) {
+    public CommentResponseDto addComment(CommentRequestDto commentRequestDto, String username) {
         ToDoList toDoList = toDoListRepository.findById(commentRequestDto.getToDoListId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ToDoList ID"));
 
@@ -33,6 +33,7 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
         toDoList.getComments().add(comment);
         comment.setCommentDate(new Timestamp(System.currentTimeMillis()));
+        comment.setUsername(username);
         return new CommentResponseDto(savedComment);
     }
 
