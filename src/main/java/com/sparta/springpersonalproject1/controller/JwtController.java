@@ -1,10 +1,14 @@
 package com.sparta.springpersonalproject1.controller;
 
 import com.sparta.springpersonalproject1.Enum.UserRoleEnum;
+import com.sparta.springpersonalproject1.dto.CustomResponse;
 import com.sparta.springpersonalproject1.dto.JwtRequestDto;
 import com.sparta.springpersonalproject1.dto.userDto.UserLoginRequestDto;
+import com.sparta.springpersonalproject1.dto.userDto.UserLoginResponseDto;
 import com.sparta.springpersonalproject1.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -18,14 +22,14 @@ public class JwtController {
     }
 
     @GetMapping("/create-token")
-    public String createJwt(HttpServletResponse res, @RequestBody UserLoginRequestDto loginRequestDto) {
-        String token = jwtUtil.generateToken(loginRequestDto.getUsername(), UserRoleEnum.valueOf(loginRequestDto.getRole()));
+    public ResponseEntity<CustomResponse<?>> createJwt(HttpServletResponse res, UserLoginResponseDto loginResponseDto) {
+        String token = jwtUtil.generateToken(loginResponseDto.getUsername(), UserRoleEnum.valueOf(loginResponseDto.getRole()));
         jwtUtil.addJwtToCookie(token, res);
-        return token;
+        return ResponseEntity.ok().body(CustomResponse.makeResponse(token, HttpStatus.OK));
     }
 
     @GetMapping("/get-token")
-    public String getJwt(@CookieValue(JwtUtil.AUTHORIZATION_HEADER) String tokenValue) {
+    public ResponseEntity<CustomResponse<?>>  getJwt(@CookieValue(JwtUtil.AUTHORIZATION_HEADER) String tokenValue) {
         // JWT 토큰 substring
         String token = jwtUtil.substringToken(tokenValue);
 
@@ -43,7 +47,8 @@ public class JwtController {
         String authority = (String) info.get(JwtUtil.AUTHORIZATION_KEY);
         System.out.println("authority = " + authority);
 
-        return "getJwt : " + username + ", " + authority;
+        String result = "getJwt : " + username + ", " + authority;
+        return ResponseEntity.ok().body(CustomResponse.makeResponse(result, HttpStatus.OK));
     }
 }
 

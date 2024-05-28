@@ -2,10 +2,12 @@ package com.sparta.springpersonalproject1.controller;
 
 import com.sparta.springpersonalproject1.dto.CustomResponse;
 import com.sparta.springpersonalproject1.dto.userDto.UserLoginRequestDto;
+import com.sparta.springpersonalproject1.dto.userDto.UserLoginResponseDto;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterReqeustDto;
 import com.sparta.springpersonalproject1.dto.userDto.UserRegisterResponseDto;
 import com.sparta.springpersonalproject1.service.UserService;
 import com.sparta.springpersonalproject1.util.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,13 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final JwtController jwtController;
+    private final HttpServletResponse httpServletResponse;
 
-    public UserController(UserService userService, JwtUtil jwtUtil, JwtController jwtController) {
+    public UserController(UserService userService, JwtUtil jwtUtil, JwtController jwtController, HttpServletResponse httpServletResponse) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.jwtController = jwtController;
+        this.httpServletResponse = httpServletResponse;
     }
 
     @PostMapping("/signup")
@@ -40,8 +44,10 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
-    private ResponseEntity<CustomResponse<?>> login(@RequestBody UserLoginRequestDto requestDto){
-        return null;
+    @GetMapping("/login")
+    private ResponseEntity<CustomResponse<?>> login(@RequestBody UserLoginRequestDto requestDto) {
+        ResponseEntity<CustomResponse<?>> responseDto = userService.loginUserAndCreateJwt(requestDto, httpServletResponse);
+        return responseDto;
     }
+
 }

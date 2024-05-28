@@ -27,15 +27,15 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
-    // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    // 토큰 만료시간 60분
+    private final long TOKEN_TIME = 60 * 60 * 1000L;
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey, application.properties에 선언
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    @PostConstruct
+    @PostConstruct // 최초 한 번만 받아오면 되는 값을 여러번 호출하는 실수를 방지하기 위한 어노테이션
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
@@ -52,18 +52,17 @@ public class JwtUtil {
                 .compact();
     }
 
-    public void addJwtToCookie(String token, HttpServletResponse response) {
+    // JWT Cookie 에 저장
+    public void addJwtToCookie(String token, HttpServletResponse res) {
         try {
-            // cookie = 공백 불가
-            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+","%20");
+            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
 
-            // Name-Value
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER,token);
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
             cookie.setPath("/");
 
-            response.addCookie(cookie);
+            // Response 객체에 Cookie 추가
+            res.addCookie(cookie);
         } catch (UnsupportedEncodingException e) {
-//            logger.error(e.getMessage());
             System.out.println(e.getMessage());
         }
     }
@@ -73,7 +72,6 @@ public class JwtUtil {
         if(StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7); // BAERER_PREFIX 숫자의 길이가 7이므로 그 이후의 값을 짤라서 가져옴
         }
-//        logger.error("Not Found Token");
         System.out.println("Not Found Token");
         throw new NullPointerException("Not Found Token");
     }
@@ -84,16 +82,12 @@ public class JwtUtil {
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             System.out.println("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-//            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
             System.out.println("Expired JWT token, 만료된 JWT token 입니다.");
-//            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             System.out.println("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-//            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
             System.out.println("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-//            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
         return false;
     }
