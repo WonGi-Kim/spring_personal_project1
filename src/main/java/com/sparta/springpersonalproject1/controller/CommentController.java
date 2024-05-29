@@ -24,23 +24,11 @@ public class CommentController {
     }
 
     @PostMapping(value = "/comment", produces = "application/json")
-    public ResponseEntity<CustomResponse<?>> addComment(@RequestHeader("Authorization") String token, @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CustomResponse<?>> addComment(@RequestHeader("Authorization") String token,
+                                                        @RequestBody CommentRequestDto commentRequestDto) {
         try {
-            try {
-                // 토큰 접두사 제거
-                token = jwtUtil.substringToken(token);
-            } catch(NullPointerException e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CustomResponse.makeResponse("Invalid token: " + e.getMessage(), HttpStatus.UNAUTHORIZED));
-            }
-            // 토큰 검증
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CustomResponse.makeResponse("Invalid token", HttpStatus.UNAUTHORIZED));
-            }
-
-            Claims claims = jwtUtil.getAllClaimsFromToken(token);
-            String username = claims.getSubject();
+            String username = jwtUtil.getUsernameFromToken(token);
             CommentResponseDto commentResponseDto = commentService.addComment(commentRequestDto, username);
-
             return ResponseEntity.ok().body(CustomResponse.makeResponse(commentResponseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -49,9 +37,11 @@ public class CommentController {
     }
 
     @PutMapping("/comment/{id}")
-    public ResponseEntity<CustomResponse<?>> updateComment(@PathVariable("id") Long id, @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CustomResponse<?>> updateComment(@RequestHeader("Authorization") String token,
+                                                           @PathVariable("id") Long id, @RequestBody CommentRequestDto commentRequestDto) {
         try {
-            CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto);
+            String username = jwtUtil.getUsernameFromToken(token);
+            CommentResponseDto commentResponseDto = commentService.updateComment(id, commentRequestDto, username);
             return ResponseEntity.ok().body(CustomResponse.makeResponse(commentResponseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -60,9 +50,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/comment/{id}")
-    public ResponseEntity<CustomResponse<?>> deleteComment(@PathVariable("id") Long id, @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CustomResponse<?>> deleteComment(@RequestHeader("Authorization") String token,
+                                                           @PathVariable("id") Long id, @RequestBody CommentRequestDto commentRequestDto) {
         try {
-            String message = commentService.deleteComment(id, commentRequestDto);
+            String username = jwtUtil.getUsernameFromToken(token);
+            String message = commentService.deleteComment(id, commentRequestDto, username);
             return ResponseEntity.ok().body(CustomResponse.makeResponse(message, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

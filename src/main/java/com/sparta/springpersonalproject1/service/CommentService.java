@@ -25,11 +25,9 @@ public class CommentService {
     }
 
     public CommentResponseDto addComment(CommentRequestDto commentRequestDto, String username) {
-        ToDoList toDoList = toDoListRepository.findById(commentRequestDto.getToDoListId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid ToDoList ID"));
+        ToDoList toDoList = findToDoListById(commentRequestDto.getToDoListId());
+        User user = findUserByUsername(username);
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
         // 데이터 유효성 검사
         if (commentRequestDto.getCommentContent() == null || commentRequestDto.getCommentContent().isEmpty()) {
             throw new IllegalArgumentException("Invalid commentDto Content");
@@ -44,21 +42,27 @@ public class CommentService {
         return new CommentResponseDto(savedComment);
     }
 
-    public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto) {
+    public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto, String username) {
+        User user = findUserByUsername(username);
         Comment comment = findByCommentId(id);
-        if (comment.getCommentContent() == null || comment.getCommentContent().isEmpty() ||
-                !comment.getUsername().equals(commentRequestDto.getUsername()) ) {
-            throw new IllegalArgumentException("Invalid commentDto Username");
+
+        if (comment.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException("Comment does not belong to user");
+        }
+        if (comment.getCommentContent() == null || comment.getCommentContent().isEmpty()) {
+            throw new IllegalArgumentException("Comment Content cannot be empty");
         }
 
         comment.updateComment(commentRequestDto);
         Comment updatedComment = commentRepository.save(comment);
+
         return new CommentResponseDto(updatedComment);
     }
 
-    public String deleteComment(Long id, CommentRequestDto commentRequestDto) {
+    public String deleteComment(Long id, CommentRequestDto commentRequestDto, String username) {
+        User user = findUserByUsername(username);
         Comment comment = findByCommentId(id);
-        if(comment.getUsername().equals(commentRequestDto.getUsername())) {
+        if(comment.getUsername().equals(user.getUsername())) {
             commentRepository.deleteById(id);
             return "삭제 완료";
         } else {
@@ -66,11 +70,21 @@ public class CommentService {
         }
     }
 
-
     private Comment findByCommentId(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("선택한 댓글이 존재하지 않습니다."));
-
         return comment;
+    }
+
+    private ToDoList findToDoListById(Long id) {
+        ToDoList toDoList = toDoListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid ToDoList ID"));
+        return toDoList;
+    }
+
+    private User findUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
+        return user;
     }
 }

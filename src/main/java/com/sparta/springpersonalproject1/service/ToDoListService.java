@@ -26,7 +26,6 @@ public class ToDoListService {
 
     public ToDoResponseDto createToDo(ToDoRequestDto toDoRequestDto, String username) {
         User user = findByUsername(username);
-
         ToDoList toDoList = new ToDoList(toDoRequestDto, user);
 
         user.getToDoLists().add(toDoList);
@@ -96,6 +95,4 @@ public class ToDoListService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
         return user;
     }
-
-
 }
