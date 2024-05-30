@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,6 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
-@Slf4j
 @Component
 public class JwtUtil {
 
@@ -67,6 +67,15 @@ public class JwtUtil {
         }
     }
 
+    // header 에서 JWT 가져오기
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
     public String substringToken(String tokenValue) {
         // 토큰의 값 검사
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
@@ -97,17 +106,22 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public Claims getAllClaimsFromToken(String token) {
-        Claims info = getUserInfoFromToken(token);
-        return info;
-    }
 
     public String getUsernameFromToken(String token) {
         token = substringToken(token);
         if (!validateToken(token)) {
             throw new IllegalArgumentException("Invalid token");
         }
-        Claims claims = getAllClaimsFromToken(token);
+        Claims claims = getUserInfoFromToken(token);
+        return claims.getSubject();
+    }
+
+    public String getUsernameToken(String token) {
+
+        if (!validateToken(token)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+        Claims claims = getUserInfoFromToken(token);
         return claims.getSubject();
     }
 }

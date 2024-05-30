@@ -46,6 +46,7 @@ public class UserController {
 
     @GetMapping("/login")
     private ResponseEntity<CustomResponse<?>> login(@RequestBody UserLoginRequestDto requestDto) {
+        System.out.println("token");
         ResponseEntity<CustomResponse<?>> responseDto = userService.loginUserAndCreateJwt(requestDto, httpServletResponse);
         return responseDto;
     }
