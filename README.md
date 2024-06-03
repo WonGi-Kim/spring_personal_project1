@@ -8,4 +8,6 @@
 
 # API 명세
 https://documenter.getpostman.com/view/34877755/2sA3JRaKZe
+
+# 수정된 API 명세
 https://documenter.getpostman.com/view/34877755/2sA3Qy4Tvr
