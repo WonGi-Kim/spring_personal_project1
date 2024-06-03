@@ -1,4 +1,4 @@
-package com.sparta.springpersonalproject1.util.custom;
+package com.sparta.springpersonalproject1.util;
 
 import com.sparta.springpersonalproject1.Enum.UserRoleEnum;
 import com.sparta.springpersonalproject1.user.entity.User;

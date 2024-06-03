@@ -21,15 +21,9 @@ import java.util.InputMismatchException;
 public class UserController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil;
-    private final JwtController jwtController;
-    private final HttpServletResponse httpServletResponse;
 
-    public UserController(UserService userService, JwtUtil jwtUtil, JwtController jwtController, HttpServletResponse httpServletResponse) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.jwtController = jwtController;
-        this.httpServletResponse = httpServletResponse;
     }
 
     @PostMapping("/signup")
@@ -45,10 +39,13 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    private ResponseEntity<CustomResponse<?>> login(@RequestBody UserLoginRequestDto requestDto) {
-        System.out.println("token");
-        ResponseEntity<CustomResponse<?>> responseDto = userService.loginUserAndCreateJwt(requestDto, httpServletResponse);
-        return responseDto;
+    private ResponseEntity<CustomResponse<?>> login(@RequestBody UserLoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
+        try {
+            CustomResponse responseDto = userService.loginUserAndCreateJwt(requestDto, httpServletResponse);
+            return ResponseEntity.ok().body(responseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                    CustomResponse.makeResponse("Username or password is incorrect.", HttpStatus.BAD_REQUEST));
+        }
     }
-
 }

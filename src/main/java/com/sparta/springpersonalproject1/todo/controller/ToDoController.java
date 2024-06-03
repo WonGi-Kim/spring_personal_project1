@@ -1,6 +1,7 @@
 package com.sparta.springpersonalproject1.todo.controller;
 
 import com.sparta.springpersonalproject1.Enum.StatusEnum;
+import com.sparta.springpersonalproject1.util.SecurityUtil;
 import com.sparta.springpersonalproject1.util.custom.CustomResponse;
 import com.sparta.springpersonalproject1.todo.dto.ToDoRequestDto;
 import com.sparta.springpersonalproject1.todo.dto.ToDoResponseDto;
@@ -16,23 +17,24 @@ import java.util.List;
 @RequestMapping("/api")
 public class ToDoController {
     private final ToDoListService toDoListService;
-    private final JwtUtil jwtUtil;
 
 
-    public ToDoController(ToDoListService toDoListService, JwtUtil jwtUtil) {
+    public ToDoController(ToDoListService toDoListService) {
         this.toDoListService = toDoListService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping(value = "/todo", produces = "application/json")
-    public ResponseEntity<CustomResponse<?>> createToDo(@RequestHeader("Authorization") String token,@RequestBody ToDoRequestDto toDoRequestDto) {
+    public ResponseEntity<CustomResponse<?>> createToDo(@RequestBody ToDoRequestDto toDoRequestDto) {
         try {
-            String username = jwtUtil.getUsernameFromToken(token);
+            String username = SecurityUtil.getCurrentUsername();
             ToDoResponseDto responseDto = toDoListService.createToDo(toDoRequestDto, username);
             return ResponseEntity.ok().body(CustomResponse.makeResponse(responseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        } catch (SecurityException e) {
+            return ResponseEntity.status((HttpStatus.UNAUTHORIZED))
+                    .body(CustomResponse.makeResponse("Unauthorized", HttpStatus.UNAUTHORIZED));
         }
     }
 
@@ -57,37 +59,46 @@ public class ToDoController {
     }
 
     @PutMapping("/todo/{id}")
-    public ResponseEntity<CustomResponse<?>> updateToDo(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
+    public ResponseEntity<CustomResponse<?>> updateToDo(@PathVariable Long id, @RequestBody ToDoRequestDto toDoRequestDto) {
         try {
-            String username = jwtUtil.getUsernameFromToken(token);
+            String username = SecurityUtil.getCurrentUsername();
             ToDoResponseDto responseDto = toDoListService.updateToDo(id, toDoRequestDto, username);
             return ResponseEntity.ok().body(CustomResponse.makeResponse(responseDto, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        } catch (SecurityException e) {
+            return ResponseEntity.status((HttpStatus.UNAUTHORIZED))
+                    .body(CustomResponse.makeResponse("Unauthorized", HttpStatus.UNAUTHORIZED));
         }
     }
 
     @DeleteMapping("/todo/{id}/{password}")
-    public ResponseEntity<CustomResponse<?>> deleteToDo(@RequestHeader("Authorization") String token, @PathVariable Long id, @PathVariable String password) {
+    public ResponseEntity<CustomResponse<?>> deleteToDo(@PathVariable Long id, @PathVariable String password) {
         try {
-            String username = jwtUtil.getUsernameFromToken(token);
+            String username = SecurityUtil.getCurrentUsername();
             Long deletedNumber = toDoListService.deleteToDo(id, password, username);
             return ResponseEntity.ok().body(CustomResponse.makeResponse(deletedNumber, HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        } catch (SecurityException e) {
+            return ResponseEntity.status((HttpStatus.UNAUTHORIZED))
+                    .body(CustomResponse.makeResponse("Unauthorized", HttpStatus.UNAUTHORIZED));
         }
     }
 
     @DeleteMapping("/todo/delete/")
-    public ResponseEntity<CustomResponse<?>> deleteAllToDos(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<CustomResponse<?>> deleteAllToDos() {
         try {
-            String username = jwtUtil.getUsernameFromToken(token);
+            String username = SecurityUtil.getCurrentUsername();
             return ResponseEntity.ok().body(CustomResponse.makeResponse(toDoListService.deleteAll(username), HttpStatus.OK));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(CustomResponse.makeResponse("Invalid input : Check ToDoListId or commentDto Content does not null", HttpStatus.BAD_REQUEST));
+        } catch (SecurityException e) {
+            return ResponseEntity.status((HttpStatus.UNAUTHORIZED))
+                    .body(CustomResponse.makeResponse("Unauthorized", HttpStatus.UNAUTHORIZED));
         }
     }
 

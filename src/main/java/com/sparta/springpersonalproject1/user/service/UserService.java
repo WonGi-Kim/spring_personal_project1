@@ -49,7 +49,7 @@ public class UserService {
         return new UserRegisterResponseDto(user);
     }
 
-    public ResponseEntity<CustomResponse<?>> loginUserAndCreateJwt(UserLoginRequestDto requestDto, HttpServletResponse res) {
+    public CustomResponse<?> loginUserAndCreateJwt(UserLoginRequestDto requestDto, HttpServletResponse res) {
         Optional<User> userOptional = userRepository.findByUsername(requestDto.getUsername());
 
         if (userOptional.isPresent()) {
@@ -63,12 +63,12 @@ public class UserService {
                 String token = jwtUtil.generateToken(responseDto.getUsername(), UserRoleEnum.valueOf(responseDto.getRole()));
                 jwtUtil.addJwtToCookie(token, res);
 
-                return ResponseEntity.ok().body(CustomResponse.makeResponse(token, HttpStatus.OK));
+                return CustomResponse.makeResponse(token, HttpStatus.OK);
             }
         }
 
         // 로그인 실패 시에는 CustomResponse를 다른 상태 코드와 함께 반환
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CustomResponse.makeResponse("Login failed", HttpStatus.UNAUTHORIZED));
+        throw new IllegalArgumentException("Username or password is incorrect.");
     }
 
 }

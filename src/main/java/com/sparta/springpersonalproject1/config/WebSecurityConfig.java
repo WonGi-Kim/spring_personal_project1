@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig {
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
@@ -36,7 +35,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/signup").permitAll()
                         .anyRequest().authenticated()
         );
-        JwtAuthorizationFilter jwtFilter = new JwtAuthorizationFilter(userRepository, jwtUtil, userDetailsService);
+        JwtAuthorizationFilter jwtFilter = new JwtAuthorizationFilter(jwtUtil, userDetailsService);
         http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

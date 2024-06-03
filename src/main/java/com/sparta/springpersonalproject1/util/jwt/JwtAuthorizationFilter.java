@@ -1,7 +1,5 @@
 package com.sparta.springpersonalproject1.util.jwt;
 
-import com.sparta.springpersonalproject1.user.repository.UserRepository;
-import com.sparta.springpersonalproject1.util.custom.Validator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -22,12 +20,10 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthorizationFilter(UserRepository userRepository, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.userRepository = userRepository;
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -61,7 +57,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     // 인증 객체 생성
     private Authentication createAuthentication(String username) {
-        //UserDetails userDetails = (UserDetails) Validator.validateUser(userRepository.findByUsername(username));
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
