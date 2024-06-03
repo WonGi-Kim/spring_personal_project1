@@ -8,3 +8,4 @@
 
 # API 명세
 https://documenter.getpostman.com/view/34877755/2sA3JRaKZe
+https://documenter.getpostman.com/view/34877755/2sA3Qy4Tvr
